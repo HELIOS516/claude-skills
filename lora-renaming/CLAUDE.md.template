@@ -1,0 +1,57 @@
+# LoRA Organization Project - CLAUDE.md Template
+
+Copy this to your LoRA project folder as `CLAUDE.md`.
+
+---
+
+## Project Overview
+Reorganizing LoRA collections to standardized naming and folder structure.
+
+## Target Schema
+```
+1_MODELS_LORA_{CHARACTER}/
+├── LORA_{CHARACTER}/
+│   ├── LORA_{MODEL}_{CHARACTER}/
+│   │   └── LORA_{MODEL}_{CHARACTER}_{VARIANT}_{MMDDYY}_E{MAX}/
+│   │       └── LORA_{MODEL}_{CHARACTER}_{VARIANT}_{DATE}_E{CURRENT}_E{MAX}.safetensors
+├── OUTPUTS_{CHARACTER}/
+├── _LORA_TRAINING_DATA_{CHARACTER}/
+└── _archive/
+```
+
+## File Naming
+- Epoch-based: `LORA_{MODEL}_{CHARACTER}_{VARIANT}_{DATE}_E{CURRENT}_E{MAX}.safetensors`
+- Step-based: `LORA_{MODEL}_{CHARACTER}_{VARIANT}_{DATE}_S{STEP}.safetensors`
+
+## Model Types
+FLUX1, FLUX2, SDXL, SD15, PONY, ZIMAGE, ZIT, CHROMA, WAN21, WAN22, HUNYUAN
+
+## Commands
+- Use Python for rename scripts (NOT bash - regex failures cause overwrites)
+- Preview all renames before executing
+
+## Code Style
+- Python scripts with collision detection
+- Always check if destination exists before moving
+- Skip files with `_COPY` suffix (duplicates)
+
+## Workflow
+1. Inventory character folder
+2. Create target folder structure
+3. Write Python rename script with preview
+4. Review preview output
+5. Execute rename
+6. Move training data to `_LORA_TRAINING_DATA_{CHARACTER}/`
+7. Clean up empty folders
+
+## DO NOT
+- Use bash for file renaming (BASH_REMATCH fails silently)
+- Overwrite files without collision check
+- Process `_training_states/` or cache files
+- Rename files ending in `.json`, `.yaml`, `.txt`
+
+## Metadata Fields (safetensors)
+- `software.name`: "ai-toolkit" → AITOOLKIT variant
+- `ss_sd_scripts_commit_hash`: present → KOHYA variant
+- `ss_base_model_version`: Base model type
+- `sshs_model_hash`: For deduplication

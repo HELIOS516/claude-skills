@@ -409,3 +409,42 @@ All character LoRAs are stored in:
 ```
 
 Subdirectories: `1_MODELS_LORA_{CHARACTER}/` for each character.
+
+
+## Slash Commands
+
+This skill includes reusable slash commands for Claude Code. Copy the `commands/` folder to your project's `.claude/commands/` directory.
+
+### Available Commands
+
+| Command | Usage | Description |
+|---------|-------|-------------|
+| `inventory` | `/project:inventory ASHLEY` | Inventory a character's LoRA files |
+| `create-structure` | `/project:create-structure MISTY` | Create standardized folder structure |
+| `gen-rename-script` | `/project:gen-rename-script JESS` | Generate Python rename script |
+| `organize-character` | `/project:organize-character SARAH` | Full end-to-end workflow |
+
+### Installation
+
+```bash
+# Copy commands to your project
+cp -r ~/claude-skills/lora-renaming/commands/ /path/to/your/project/.claude/commands/
+
+# Copy CLAUDE.md template
+cp ~/claude-skills/lora-renaming/CLAUDE.md.template /path/to/your/project/CLAUDE.md
+```
+
+### Workflow (Boris Pattern)
+
+1. **CLAUDE.md** - Project memory, updated when Claude makes mistakes
+2. **Slash commands** - Repeatable workflows with `$ARGUMENTS` for character names
+3. **Plan Mode** - `Shift+Tab` twice before non-trivial tasks
+4. **Skills** - This skill provides the naming schema knowledge
+
+When Claude does something wrong, add it to CLAUDE.md:
+```markdown
+## DO NOT
+- Use bash for file renaming (BASH_REMATCH fails silently)
+```
+
+This creates compounding improvements over time.

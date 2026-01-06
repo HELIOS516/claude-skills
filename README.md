@@ -4,13 +4,13 @@ Personal collection of Claude Code skills for extending Claude's capabilities wi
 
 ## Installation
 
-### Option 1: Symlink entire repo
+### Option 1: Symlink entire repo (recommended)
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/claude-skills.git ~/claude-skills
+git clone https://github.com/HELIOS516/claude-skills.git ~/claude-skills
 
 # Symlink to Claude's skills directory
-ln -s ~/claude-skills ~/.claude/skills
+ln -sf ~/claude-skills ~/.claude/skills
 ```
 
 ### Option 2: Copy individual skills
@@ -22,32 +22,63 @@ cp -r ~/claude-skills/lora-renaming ~/.claude/skills/
 
 | Skill | Description |
 |-------|-------------|
-| [lora-renaming](./lora-renaming/) | Standardized naming conventions for LoRA safetensors files and folders used in Stable Diffusion, SDXL, Flux, and other AI image generation models |
+| [lora-renaming](./lora-renaming/) | Standardized naming conventions for LoRA safetensors files and folders |
 
-## Skill Structure
+## Using Skills with Projects
 
-Each skill follows the Claude Code skill format:
+Each skill can include:
+- `SKILL.md` - Main skill definition (auto-loaded by Claude Code)
+- `commands/` - Slash commands for repeatable workflows
+- `CLAUDE.md.template` - Project memory template
+
+### Setting Up a Project
+
+```bash
+cd /path/to/your/project
+
+# Copy slash commands
+mkdir -p .claude/commands
+cp ~/claude-skills/lora-renaming/commands/*.md .claude/commands/
+
+# Copy CLAUDE.md template and customize
+cp ~/claude-skills/lora-renaming/CLAUDE.md.template ./CLAUDE.md
 ```
-skill-name/
-└── SKILL.md    # Main skill definition with instructions
+
+### Using Slash Commands
+
+In Claude Code:
 ```
-
-## Usage
-
-Once installed, Claude Code will automatically detect and use these skills when relevant tasks are requested.
+/project:inventory ASHLEY
+/project:create-structure MISTY
+/project:organize-character SARAH
+```
 
 ## Adding New Skills
 
-1. Create a new folder with your skill name
-2. Add a `SKILL.md` file with frontmatter:
+1. Create a new folder: `mkdir new-skill-name`
+2. Add `SKILL.md` with frontmatter:
    ```yaml
    ---
    name: skill-name
-   description: Brief description of what the skill does
+   description: Brief description
    ---
    ```
-3. Add your skill content below the frontmatter
-4. Commit and push
+3. Optionally add `commands/` folder with slash commands
+4. Optionally add `CLAUDE.md.template` for project setup
+5. Commit and push
+
+## Syncing Across Machines
+
+After cloning on a new machine:
+```bash
+git clone https://github.com/HELIOS516/claude-skills.git ~/claude-skills
+ln -sf ~/claude-skills ~/.claude/skills
+```
+
+To update:
+```bash
+cd ~/claude-skills && git pull
+```
 
 ## License
 
