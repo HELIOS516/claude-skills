@@ -26,12 +26,13 @@ description: Rename LoRA safetensors files and folders using standardized naming
 - `LORA_SDXL_{CHARACTER}/`
 - `LORA_SD15_{CHARACTER}/`
 - `LORA_PONY_{CHARACTER}/`
-- `LORA_ZIMAGE_{CHARACTER}/`
-- `LORA_ZIT_{CHARACTER}/`
+- `LORA_ZIMAGE_{CHARACTER}/` (includes turbo variants - use TURBO in variant field)
 - `LORA_CHROMA_{CHARACTER}/`
 - `LORA_WAN21_{CHARACTER}/`
 - `LORA_WAN22_{CHARACTER}/`
 - `LORA_HUNYUAN_{CHARACTER}/`
+
+**Note:** ZIT (Z-Image Turbo) is NOT a separate model type. Use `ZIMAGE` with `TURBO` variant instead.
 
 ## Folder Naming Convention
 
@@ -40,9 +41,11 @@ LORA_{MODEL}_{CHARACTER}_{VARIANT}_{MMDDYY}_E{MAX}/
 ```
 
 **Components:**
-- `MODEL`: UPPERCASE model type (FLUX1, FLUX2, SDXL, SD15, PONY, ZIMAGE, ZIT, etc.)
+- `MODEL`: UPPERCASE model type (FLUX1, FLUX2, SDXL, SD15, PONY, ZIMAGE, CHROMA, WAN21, WAN22, HUNYUAN)
 - `CHARACTER`: UPPERCASE character name (SIJIA, EVAN, HOLLY, JESS, etc.)
 - `VARIANT`: UPPERCASE training variant - **MUST verify from metadata** (AITOOLKIT, KOHYA, H200, LUSTIFY, TURBO, CYBER, ULTRAREALISTIC, BASE, etc.)
+
+**IMPORTANT:** For ZIMAGE turbo training, use MODEL=ZIMAGE with VARIANT=TURBO (not a separate ZIT model type).
 - `MMDDYY`: Training date in month-day-year format
 - `E{MAX}`: Total epochs trained (e.g., E10, E15, E30)
 
@@ -79,7 +82,7 @@ LORA_{MODEL}_{CHARACTER}_{VARIANT}_{DATE}_S{STEP}.safetensors
 
 **Examples:**
 - `LORA_ZIMAGE_ASHLEY_TURBO_010126_S2500.safetensors`
-- `LORA_ZIT_SIJIA_H200_122825_S1400.safetensors`
+- `LORA_ZIMAGE_SIJIA_TURBO_H200_122825_S1400.safetensors`
 - `LORA_CHROMA_SEOLAHH_BASE_120325_S750.safetensors`
 
 ## Complete Reorganization Script Template
@@ -142,10 +145,8 @@ def main():
             model = "FLUX2"
         elif folder_name.startswith('PONY_'):
             model = "PONY"
-        elif folder_name.startswith('ZIMAGE_'):
-            model = "ZIMAGE"
-        elif folder_name.startswith('ZIT_'):
-            model = "ZIT"
+        elif folder_name.startswith('ZIMAGE_') or folder_name.startswith('ZIT_'):
+            model = "ZIMAGE"  # ZIT is ZIMAGE turbo - use TURBO variant
         else:
             continue
 
@@ -301,20 +302,21 @@ def detect_training_software(metadata):
 
 ## Base Model Mapping
 
-| Metadata Value | Short Code |
-|----------------|------------|
-| flux1 | FLUX1 |
-| flux2 | FLUX2 |
-| sdxl_base_v1-0 | SDXL |
-| sd_v1 | SD15 |
-| sd_v2 | SD20 |
-| pony | PONY |
-| z-image turbo | ZIMAGE |
-| zit | ZIT |
-| hunyuan | HUNYUAN |
-| wan2.1 | WAN21 |
-| wan2.2 | WAN22 |
-| chroma | CHROMA |
+| Metadata Value | Short Code | Notes |
+|----------------|------------|-------|
+| flux1 | FLUX1 | |
+| flux2 | FLUX2 | |
+| sdxl_base_v1-0 | SDXL | |
+| sd_v1 | SD15 | |
+| sd_v2 | SD20 | |
+| pony | PONY | |
+| z-image, zimage, zit | ZIMAGE | For turbo, use TURBO variant |
+| hunyuan | HUNYUAN | |
+| wan2.1 | WAN21 | |
+| wan2.2 | WAN22 | |
+| chroma | CHROMA | |
+
+**Note:** When metadata shows `zit` or `z-image turbo`, use MODEL=ZIMAGE with VARIANT containing TURBO.
 
 ## Training Software Detection (CRITICAL)
 
