@@ -448,3 +448,125 @@ When Claude does something wrong, add it to CLAUDE.md:
 ```
 
 This creates compounding improvements over time.
+
+
+## Subagents
+
+This skill includes a verification subagent. Copy `agents/` to your project's `.claude/agents/` directory.
+
+### Available Agents
+
+| Agent | Description |
+|-------|-------------|
+| `verify-renames` | Validates rename operations completed successfully |
+
+### Installation
+
+```bash
+# Copy agents to your project
+cp -r ~/claude-skills/lora-renaming/agents/ /path/to/your/project/.claude/agents/
+```
+
+
+## Verification (CRITICAL)
+
+> "Give Claude a way to verify its work. If Claude has that feedback loop, it will 2-3x the quality of the final result." - Boris Cherny
+
+### Pre-Execution Verification
+
+Before running any rename script:
+
+1. **Count source files**: `find . -name "*.safetensors" | wc -l`
+2. **Check collision detection**: Script must abort if multiple files → same destination
+3. **Preview mode**: Review proposed renames before executing
+4. **Check for regex failures**: Ensure patterns actually matched
+
+### Post-Execution Verification
+
+After running rename script:
+
+```bash
+# Verify file count unchanged
+find . -name "*.safetensors" | wc -l
+
+# Check naming compliance
+find . -name "*.safetensors" -exec basename {} \; | head -20
+
+# Find potential duplicates
+find . -name "*.safetensors" -exec basename {} \; | sort | uniq -d
+
+# Find empty folders (cleanup candidates)
+find . -type d -empty
+
+# Verify folder structure
+ls -la LORA_*/
+```
+
+### Verification Checklist
+
+- [ ] Same file count before/after
+- [ ] All files follow naming convention
+- [ ] No duplicate filenames
+- [ ] No orphaned files in root
+- [ ] Empty source folders cleaned up
+- [ ] Training data moved correctly
+- [ ] Outputs moved correctly
+
+
+## Parallel Execution (Boris Pattern)
+
+For organizing multiple characters simultaneously:
+
+### Git Worktree Strategy
+```bash
+# Create isolated worktrees for parallel work
+git worktree add ../lora-ashley -b feature/ashley
+git worktree add ../lora-misty -b feature/misty
+```
+
+### iTerm2 Setup
+1. Open 5 terminal tabs (numbered 1-5)
+2. Preferences → Profiles → Terminal → ✓ "Send notification on idle"
+3. Run one character per tab:
+   - Tab 1: `/project:organize-character ASHLEY`
+   - Tab 2: `/project:organize-character COURTNEY`
+   - Tab 3: `/project:organize-character EVAN`
+
+Each session is independent, preventing conflicts.
+
+
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| All files renamed to same name | Bash regex failure | Use Python script |
+| Files overwritten | No collision detection | Add abort-on-collision |
+| Wrong model type | Metadata not read | Extract from safetensors |
+| Missing epoch info | Regex didn't match | Add more patterns |
+| Date format wrong | Not MMDDYY | Parse ISO and convert |
+
+### Debug Commands
+
+```python
+# Check metadata for a specific file
+from pathlib import Path
+import json
+
+def get_metadata(path):
+    with open(path, 'rb') as f:
+        size = int.from_bytes(f.read(8), 'little')
+        return json.loads(f.read(size)).get('__metadata__', {})
+
+meta = get_metadata("file.safetensors")
+print(json.dumps(meta, indent=2))
+```
+
+### Recovery
+
+If renames went wrong:
+1. Check git status (if files tracked)
+2. Restore from backup/archive
+3. Use file history (Google Drive has versioning)
+4. Cross-reference with metadata hashes

@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      },
+      "description": "Search and post to Slack channels"
+    },
+    "github": {
+      "command": "npx", 
+      "args": ["-y", "@anthropic/mcp-server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub operations - PRs, issues, repos"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-filesystem", "/path/to/allowed/dir"],
+      "description": "File system access with boundaries"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-puppeteer"],
+      "description": "Browser automation for testing"
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-sqlite", "--db", "/path/to/database.db"],
+      "description": "SQLite database queries"
+    }
+  },
+  "globalConfig": {
+    "timeout": 30000,
+    "retries": 2
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "hooks": [
+    {
+      "name": "format-on-save",
+      "description": "Auto-format files after Claude edits them",
+      "event": "PostToolUse",
+      "tools": ["write_file", "edit_file", "str_replace_editor"],
+      "command": "prettier --write \"$FILE\" 2>/dev/null || true",
+      "timeout": 5000
+    },
+    {
+      "name": "lint-python",
+      "description": "Auto-format Python files with black",
+      "event": "PostToolUse", 
+      "tools": ["write_file", "edit_file"],
+      "pattern": "*.py",
+      "command": "black \"$FILE\" 2>/dev/null || true",
+      "timeout": 5000
+    },
+    {
+      "name": "verify-on-stop",
+      "description": "Run verification when Claude completes a task",
+      "event": "Stop",
+      "command": "echo 'Task complete. Running verification...' && npm test 2>/dev/null || pytest 2>/dev/null || echo 'No tests found'",
+      "timeout": 30000
+    },
+    {
+      "name": "notify-complete",
+      "description": "System notification when long task completes",
+      "event": "Stop",
+      "command": "osascript -e 'display notification \"Claude Code task complete\" with title \"Claude\"' 2>/dev/null || true",
+      "timeout": 2000
+    }
+  ]
+}

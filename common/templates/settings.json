@@ -1,0 +1,48 @@
+{
+  "permissions": {
+    "allow": [
+      "git status",
+      "git diff",
+      "git diff --cached",
+      "git log",
+      "git branch",
+      "git show",
+      "git stash",
+      "git stash pop",
+      "ls",
+      "cat",
+      "head",
+      "tail", 
+      "wc",
+      "find . -name",
+      "find . -type",
+      "grep -r",
+      "tree",
+      "pwd",
+      "echo",
+      "python -m pytest",
+      "npm test",
+      "npm run lint",
+      "npm run build",
+      "prettier --write",
+      "black",
+      "ruff check",
+      "gh pr",
+      "gh issue"
+    ],
+    "deny": [
+      "rm -rf /",
+      "sudo",
+      "chmod 777",
+      "curl | bash",
+      "wget | bash"
+    ]
+  },
+  "model": "opus-4-5",
+  "thinking": true,
+  "autoCompact": true,
+  "planMode": {
+    "defaultEnabled": true,
+    "requireApprovalForExecution": true
+  }
+}
