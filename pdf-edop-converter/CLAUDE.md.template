@@ -1,0 +1,197 @@
+# PDF EDOP Converter - CLAUDE.md Template
+
+Copy this to your PDF conversion project folder as `CLAUDE.md`.
+
+---
+
+## Project Overview
+
+Converting surgical operative dictation chapters from PDF textbooks into UVA Epic EDOP templates with intelligent logical branching.
+
+## Official UVA Template Structure
+
+```
+OPERATIVE NOTE
+
+Date/Time:
+@TODAYDATE@ @NOW@
+
+@ORCASETRKSTARTSTOP@
+
+Patient:
+@NAME@
+
+MRN:
+@MRN@
+
+Surgical Team:
+Primary and Assisting Surgeons:
+@ORSURGPANEL@
+
+Additional Surgical Staff:
+@ORSSTAFF@
+
+Procedure:
+@ORPROCALL@
+
+Preoperative Diagnosis:
+@ORDXCPRE@
+
+Postoperative Diagnosis:
+@ORPOSTDX@
+
+Anesthesia:
+@ORANEST@
+
+Indications:
+@NAME@ is a @AGE@ @SEX@ who [clinical presentation and indication].
+
+Findings:
+[Numbered list OR SmartList]
+
+Description of Procedure:
+[Detailed procedural narrative]
+
+Fluids / I&O:
+  Crystalloid/Colloid: ***
+  Blood: ***
+  EBL: @ORBLDLOSS@
+  UOP: ***
+
+Specimens:
+@ORSPEC@
+
+Drains:
+***
+
+Implants:
+@ORIMPLANTWACT@
+
+Wound Class:
+{EDLISTWOUNDCLASS:54468}
+
+Complications:
+NONE ***
+
+Disposition:
+{EDLISTDISPO:54467}
+
+@SIG@
+```
+
+## EDOP Naming Schema
+
+Pattern: `EDOP` + `[ANATOMY/DISEASE]` + `[APPROACH]` + `[PROCEDURE]`
+
+Examples:
+- EDOPPERFORATEDPEPTICULCERLAPPLICATION
+- EDOPSMALLBOWELRESECTION
+- EDOPVENTRALHERNIALAP
+
+## Template Logic Markers
+
+### Major Branches (select one)
+```
+=== SECTION NAME (select one) ===
+
+--- Option A: Name ---
+[complete content A]
+--- End Option A ---
+
+--- Option B: Name ---
+[complete content B]
+--- End Option B ---
+
+=== END SECTION NAME ===
+```
+
+### Conditionals (include if true)
+```
+[IF CONDITION]
+Content that applies when condition is met.
+[/IF]
+```
+
+### Inline Choices
+```
+{option1 | option2 | option3}
+```
+First option = most common/default
+
+### Fill-ins
+```
+[___:measurement cm]
+[___:count]
+[describe:symptoms]
+```
+
+### Optional Content
+```
+[OPTIONAL]
+Content that may or may not apply.
+[/OPTIONAL]
+```
+
+## UVA SmartLinks
+
+### Patient/Demographics
+- `@NAME@` `@MRN@` `@AGE@` `@SEX@` `@LEFTRIGHT@`
+
+### Date/Time
+- `@TODAYDATE@` `@NOW@` `@ORCASETRKSTARTSTOP@`
+- `@IPTODAYDATE@` `@LASTSURGDATE@` `@ORDATE@`
+
+### Team/Procedure
+- `@ORSURGPANEL@` `@ORSSTAFF@` `@ORSURROLE@`
+- `@ORPROCALL@` `@ORPROCLAT@`
+
+### Diagnoses/Anesthesia
+- `@ORDXCPRE@` `@ORPOSTDX@` `@ORDXCODE@`
+- `@ORANEST@` `@ORAMBANEST@` `@ORANESSTAFF@`
+
+### Fluids/I&O
+- `@ORCRYSTAL@` `@ORCOLLOID@` `@ORTRANSFUSED@`
+- `@ORBLDLOSS@` `@ORURINEOUTPUT@` `@RRIOCURSHIFT@`
+
+### Labs
+- `@RESUFAST(WBC,RBC,HGB,etc)@`
+- `@BRIEFLAB(ast:1,alt:1)@`
+
+### Operative Data
+- `@ORSPEC@` `@ORSPECPG@` `@ORSPECMN@`
+- `@ORDRAIN@` `@ORIMPLANT@` `@ORIMPLANTWACT@`
+
+### SmartLists
+- `{EDLISTWOUNDCLASS:54468}` - Wound class
+- `{EDLISTDISPO:54467}` - Disposition
+- `{EDOPCHOLEFINDINGS:55621}` - Chole findings
+- `{EDOPFASCIAL CLOSURE:55622}` - Fascial closure
+- `{zz_blank reuse:ID::"opt1","opt2"}` - Inline options
+
+### Signature
+- `@SIG@`
+
+## DO NOT
+
+- Use bash for text processing (use Python)
+- Make up SmartLinks (only use approved UVA links)
+- Leave branches incomplete
+- Mix incompatible surgical techniques
+- Skip the Findings section
+- Forget standard safety elements
+
+## DO
+
+- Analyze decision tree BEFORE converting
+- Keep indication-specific content grouped
+- Test each logical path for coherence
+- Include all common technique variants
+- Document all conversion decisions
+
+## Quality Checklist
+
+- [ ] All UVA sections present
+- [ ] All SmartLinks correct format
+- [ ] All branches properly closed
+- [ ] Each path produces valid dictation
+- [ ] Professional tone throughout
